@@ -84,6 +84,52 @@ def test_perform_operation_addition(calculator):
     result = calculator.perform_operation(2, 3)
     assert result == Decimal('5')
 
+def test_perform_operation_subtraction(calculator):
+    operation = OperationFactory.create_operation('subtract')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(10, 4)
+    assert result == Decimal('6')
+
+def test_perform_operation_multiplication(calculator):
+    operation = OperationFactory.create_operation('multiply')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(7, 8)
+    assert result == Decimal('56')
+
+def test_perform_operation_division(calculator):
+    operation = OperationFactory.create_operation('divide')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(20, 4)
+    assert result == Decimal('5')
+
+def test_perform_operation_division_by_zero(calculator):
+    operation = OperationFactory.create_operation('divide')
+    calculator.set_operation(operation)
+    with pytest.raises(ValidationError, match="Division by zero is not allowed"):
+        calculator.perform_operation(10, 0)
+
+def test_perform_operation_power(calculator):
+    operation = OperationFactory.create_operation('power')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(2, 3)
+    assert result == Decimal('8')
+
+def test_perform_operation_root(calculator):
+    operation = OperationFactory.create_operation('root')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(16, 2)
+    # sqrt(16) = 4
+    assert result.quantize(Decimal('1')) == Decimal('4')
+
+def test_perform_operation_root_invalid(calculator):
+    operation = OperationFactory.create_operation('root')
+    calculator.set_operation(operation)
+    # Negative number root or zero-degree root should raise validation error
+    with pytest.raises(ValidationError):
+        calculator.perform_operation(-9, 2)
+    with pytest.raises(ValidationError):
+        calculator.perform_operation(9, 0)
+
 def test_perform_operation_modulus(calculator):
     operation = OperationFactory.create_operation('modulus')
     calculator.set_operation(operation)
