@@ -84,6 +84,31 @@ def test_perform_operation_addition(calculator):
     result = calculator.perform_operation(2, 3)
     assert result == Decimal('5')
 
+def test_perform_operation_modulus(calculator):
+    operation = OperationFactory.create_operation('modulus')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(50, 4)
+    assert result == Decimal('2')
+
+def test_perform_operation_int_divide(calculator):
+    operation = OperationFactory.create_operation('int_divide')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(10, 3)
+    assert result == Decimal('3')  # Integer division result
+
+def test_perform_operation_percent(calculator):
+    operation = OperationFactory.create_operation('percent')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(60, 2)
+    # (a / b) * 100 = (60 / 2) * 100 = 3000
+    assert result == Decimal('3000')
+
+def test_perform_operation_abs_diff(calculator):
+    operation = OperationFactory.create_operation('abs_diff')
+    calculator.set_operation(operation)
+    result = calculator.perform_operation(10, 25)
+    assert result == Decimal('15')    
+
 def test_perform_operation_validation_error(calculator):
     calculator.set_operation(OperationFactory.create_operation('add'))
     with pytest.raises(ValidationError):
