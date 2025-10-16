@@ -247,6 +247,62 @@ class Root(Operation):
         """
         self.validate_operands(a, b)
         return Decimal(pow(float(a), 1 / float(b)))
+    
+class Modulus(Operation):
+    """
+    Modulus operation implementation.
+    Computes the remainder of the division of two numbers.
+    """
+
+    def validate_operands(self, a: Decimal, b: Decimal) -> None:
+        super().validate_operands(a, b)
+        if b == 0:
+            raise ValidationError("Division by zero is not allowed in modulus operation")
+
+    def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        self.validate_operands(a, b)
+        return a % b
+    
+class IntegerDivision(Operation):
+    """
+    Integer Division operation implementation.
+    Performs division that results in an integer quotient.
+    """
+
+    def validate_operands(self, a: Decimal, b: Decimal) -> None:
+        super().validate_operands(a, b)
+        if b == 0:
+            raise ValidationError("Division by zero is not allowed in integer division")
+
+    def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        self.validate_operands(a, b)
+        return Decimal(int(a // b))   
+
+
+class Percentage(Operation):
+    """
+    Percentage operation implementation.
+    Calculates (a / b) * 100.
+    """
+
+    def validate_operands(self, a: Decimal, b: Decimal) -> None:
+        super().validate_operands(a, b)
+        if b == 0:
+            raise ValidationError("Cannot divide by zero for percentage calculation")
+
+    def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        self.validate_operands(a, b)
+        return (a / b) * 100     
+    
+class AbsoluteDifference(Operation):
+    """
+    Absolute Difference operation implementation.
+    Calculates the absolute difference between two numbers.
+    """
+
+    def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        self.validate_operands(a, b)
+        return abs(a - b)        
 
 
 class OperationFactory:
@@ -265,7 +321,12 @@ class OperationFactory:
         'multiply': Multiplication,
         'divide': Division,
         'power': Power,
-        'root': Root
+        'root': Root,
+        'modulus': Modulus,
+        'int_divide': IntegerDivision,
+        'percent': Percentage,
+        'abs_diff': AbsoluteDifference
+
     }
 
     @classmethod
@@ -307,3 +368,4 @@ class OperationFactory:
         if not operation_class:
             raise ValueError(f"Unknown operation: {operation_type}")
         return operation_class()
+
