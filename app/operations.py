@@ -4,6 +4,7 @@
 
 from abc import ABC, abstractmethod
 from decimal import Decimal
+import math
 from typing import Dict
 from app.exceptions import ValidationError
 
@@ -276,7 +277,7 @@ class IntegerDivision(Operation):
 
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
-        return Decimal(int(a // b))   
+        return Decimal(math.floor(float(a) / float(b)))   
 
 
 class Percentage(Operation):

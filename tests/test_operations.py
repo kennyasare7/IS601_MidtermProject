@@ -12,6 +12,10 @@ from app.operations import (
     Power,
     Root,
     OperationFactory,
+    Modulus,
+    IntegerDivision,
+    Percentage,
+    AbsoluteDifference,
 )
 
 
@@ -181,6 +185,73 @@ class TestRoot(BaseOperationTest):
         },
     }
 
+class TestModulus(BaseOperationTest):
+    """Test Modulus operation."""
+
+    operation_class = Modulus
+    valid_test_cases = {
+        "positive_numbers": {"a": "10", "b": "3", "expected": "1"},
+        "negative_numbers": {"a": "-10", "b": "3", "expected": "-1"},
+        "zero_remainder": {"a": "9", "b": "3", "expected": "0"},
+        "mixed_signs": {"a": "10", "b": "-3", "expected": "1"},
+    }
+    invalid_test_cases = {
+        "divide_by_zero": {
+            "a": "10",
+            "b": "0",
+            "error": ValidationError,
+            "message": "Division by zero is not allowed in modulus operation",
+        },
+    }
+
+class TestIntegerDivision(BaseOperationTest):
+    """Test Integer Division operation."""
+
+    operation_class = IntegerDivision
+    valid_test_cases = {
+        "positive_numbers": {"a": "10", "b": "3", "expected": "3"},
+        "negative_numbers": {"a": "-10", "b": "-3", "expected": "3"},
+        "mixed_signs": {"a": "-10", "b": "3", "expected": "-4"},
+        "divide_evenly": {"a": "9", "b": "3", "expected": "3"},
+    }
+    invalid_test_cases = {
+        "divide_by_zero": {
+            "a": "10",
+            "b": "0",
+            "error": ValidationError,
+            "message": "Division by zero is not allowed in integer division",
+        },
+    }
+
+class TestPercentage(BaseOperationTest):
+    """Test Percentage operation."""
+
+    operation_class = Percentage
+    valid_test_cases = {
+        "basic_case": {"a": "60", "b": "2", "expected": "3000"},
+        "decimal_values": {"a": "7.5", "b": "2.5", "expected": "300"},
+        "small_numbers": {"a": "1", "b": "4", "expected": "25"},
+    }
+    invalid_test_cases = {
+        "divide_by_zero": {
+            "a": "10",
+            "b": "0",
+            "error": ValidationError,
+            "message": "Cannot divide by zero for percentage calculation",
+        },
+    }
+
+class TestAbsoluteDifference(BaseOperationTest):
+    """Test Absolute Difference operation."""
+
+    operation_class = AbsoluteDifference
+    valid_test_cases = {
+        "positive_numbers": {"a": "10", "b": "4", "expected": "6"},
+        "reversed_numbers": {"a": "4", "b": "10", "expected": "6"},
+        "negative_numbers": {"a": "-5", "b": "-10", "expected": "5"},
+        "mixed_signs": {"a": "-10", "b": "5", "expected": "15"},
+    }
+    invalid_test_cases = {}  # No invalid cases for abs_diff    
 
 class TestOperationFactory:
     """Test OperationFactory functionality."""
@@ -194,6 +265,10 @@ class TestOperationFactory:
             'divide': Division,
             'power': Power,
             'root': Root,
+            'modulus': Modulus,
+            'int_divide': IntegerDivision,
+            'percent': Percentage,
+            'abs_diff': AbsoluteDifference,
         }
 
         for op_name, op_class in operation_map.items():
